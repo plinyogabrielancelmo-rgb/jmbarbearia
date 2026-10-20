@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JM Barber | Agende seu horário</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--panel:#121110;--line:#2a2620;--gold:#d4a53a;--gold2:#f1d27a;--ivory:#f5efe0;--mute:#a69f8f;--ok:#6fcf8e;--bad:#e5645a}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ivory);font-family:Manrope,system-ui,sans-serif;line-height:1.55;overflow-x:hidden}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;line-height:1.1}
+a{color:inherit}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.gold{background:linear-gradient(100deg,var(--gold) 20%,var(--gold2) 45%,var(--gold) 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:-220% 0}}
+header{padding:18px 0;border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px;font-family:'Playfair Display',serif;font-weight:800;font-size:1.3rem;text-decoration:none}
+.brand svg{width:34px;height:34px;animation:float 3.5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-4px)}}
+.btn{display:inline-block;background:var(--gold);color:#000;border:0;border-radius:6px;padding:13px 24px;font-weight:800;text-decoration:none;transition:transform .15s,background .15s}
+.btn:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
+.hero{padding:56px 0 64px}
+.hero .wrap{display:grid;grid-template-columns:1fr 150px;gap:40px;align-items:center}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:.9rem;color:var(--mute);margin-bottom:18px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--mute)}
+.status.open .dot{background:var(--ok);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(111,207,142,.6)}100%{box-shadow:0 0 0 12px rgba(111,207,142,0)}}
+.hero h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800;margin-bottom:18px}
+.hero p{color:var(--mute);max-width:46ch;margin-bottom:28px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.pole{width:84px;height:300px;margin:0 auto;border-radius:42px;border:3px solid var(--gold);position:relative;overflow:hidden;box-shadow:0 0 40px rgba(212,165,58,.25);background:repeating-linear-gradient(-45deg,var(--gold) 0 18px,var(--ivory) 18px 36px,#000 36px 54px);background-size:76px 76px;animation:spin 1.6s linear infinite}
+.pole::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55),transparent 35%,rgba(255,255,255,.25) 55%,transparent 70%,rgba(0,0,0,.6))}
+@keyframes spin{to{background-position:0 76px}}
+.polebox{text-align:center}
+.scissors{width:64px;margin:14px auto 0;display:block;color:var(--gold)}
+.scissors .b1{transform-origin:32px 32px;animation:snip1 1.6s ease-in-out infinite}
+.scissors .b2{transform-origin:32px 32px;animation:snip2 1.6s ease-in-out infinite}
+@keyframes snip1{50%{transform:rotate(-16deg)}}
+@keyframes snip2{50%{transform:rotate(16deg)}}
+section{padding:56px 0;border-top:1px solid var(--line)}
+section h2{font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:8px}
+.sub{color:var(--mute);margin-bottom:28px}
+.step{margin-bottom:34px}
+.step h3{font-size:1.2rem;margin-bottom:12px;color:var(--gold2)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;text-align:left;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.card.sel{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);background:#1a160d}
+.card b{display:block;font-size:1.02rem}
+.card span{color:var(--mute);font-size:.88rem}
+.days{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px}
+.day{flex:0 0 72px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 0;text-align:center;transition:.2s}
+.day small{display:block;color:var(--mute);text-transform:capitalize}
+.day strong{font-size:1.4rem;font-family:'Playfair Display',serif}
+.day:hover{border-color:var(--gold)}
+.day.sel{background:var(--gold);color:#000;border-color:var(--gold)}
+.day.sel small{color:#000}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px}
+.time{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:11px 0;font-weight:600;transition:.2s}
+.time:hover:not(:disabled){border-color:var(--gold)}
+.time.sel{background:var(--gold);color:#000;border-color:var(--gold);animation:pop .3s}
+@keyframes pop{50%{transform:scale(1.1)}}
+.time:disabled{color:#5b554a;text-decoration:line-through;cursor:not-allowed;background:#0b0a09}
+.hint{color:var(--mute);font-size:.9rem}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:18px}
+label{display:block;font-size:.88rem;color:var(--mute);margin-bottom:5px}
+input,textarea,select{width:100%;background:#0b0a09;border:1px solid var(--line);border-radius:6px;color:var(--ivory);padding:12px;font:inherit}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);outline:0}
+.err{color:var(--bad);min-height:1.4em;margin-top:8px;font-size:.92rem}
+.done{display:none;background:#10180f;border:1px solid var(--ok);border-radius:10px;padding:24px;margin-top:20px;animation:pop .4s}
+.done.show{display:block}
+.done h3{color:var(--ok);margin-bottom:8px}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px}
+.info h3{margin-bottom:8px;color:var(--gold2)}
+.info p{color:var(--mute)}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--mute);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer button{background:none;border:0;color:var(--mute);text-decoration:underline}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 12px;z-index:50}
+.modal.show{display:flex}
+.sheet{background:var(--panel);border:1px solid var(--gold);border-radius:12px;width:100%;max-width:760px;padding:24px;animation:pop .3s}
+.sheet header{border:0;padding:0 0 14px;display:flex;justify-content:space-between;align-items:center}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:#0b0a09}
+.row .when{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold2);min-width:92px}
+.row .who{flex:1;min-width:150px}
+.row .who small{color:var(--mute);display:block}
+.row .acts{display:flex;gap:8px;flex-wrap:wrap}
+.sm{padding:8px 13px;font-size:.85rem;border-radius:6px;border:1px solid var(--line);background:none}
+.sm.wa{background:#1d8f4e;border-color:#1d8f4e;color:#fff;font-weight:700;text-decoration:none}
+.sm.del:hover{border-color:var(--bad);color:var(--bad)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.tools select{width:auto}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--gold);color:#000;padding:12px 20px;border-radius:8px;font-weight:700;transition:transform .3s;z-index:60}
+.toast.show{transform:translateX(-50%)}
+@media(max-width:700px){.hero .wrap{grid-template-columns:1fr}.polebox{order:-1}.pole{height:110px;width:220px;border-radius:55px;animation-name:spinh}@keyframes spinh{to{background-position:76px 0}}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#topo" id="topo">
+      <svg viewBox="0 0 64 64" fill="none" stroke="#d4a53a" stroke-width="3" stroke-linejoin="round"><path d="M8 44 4 18l15 12 13-18 13 18 15-12-4 26z" fill="#d4a53a" fill-opacity=".2"/><path d="M10 54h44"/></svg>
+      <span>JM <span class="gold">Barber</span></span>
+    </a>
+    <a class="btn" href="#agendar">Agendar</a>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <div class="status" id="status"><span class="dot"></span><span id="statusTxt">Verificando horário…</span></div>
+      <h1>Seu estilo é a <span class="gold">nossa prioridade.</span></h1>
+      <p>Corte de cabelo, barba alinhada e visual renovado. Escolha o serviço, o dia e o horário: cada horário reservado some da agenda, sem risco de duas pessoas no mesmo lugar.</p>
+      <div class="cta">
+        <a class="btn" href="#agendar">Agendar meu horário</a>
+        <a class="btn ghost" href="https://wa.me/5522988581590" target="_blank" rel="noopener">WhatsApp (22) 98858-1590</a>
+      </div>
+    </div>
+    <div class="polebox" aria-hidden="true">
+      <div class="pole"></div>
+      <svg class="scissors" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+        <g class="b1"><path d="M32 32 52 8"/><circle cx="16" cy="50" r="7"/><path d="M32 32 21 45"/></g>
+        <g class="b2"><path d="M32 32 12 8"/><circle cx="48" cy="50" r="7"/><path d="M32 32 43 45"/></g>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<section id="agendar">
+  <div class="wrap">
+    <h2>Agende seu horário</h2>
+    <p class="sub">Leva menos de um minuto. A confirmação vai para o WhatsApp da barbearia.</p>
+
+    <div class="step"><h3>Qual serviço?</h3><div class="choices" id="services"></div></div>
+    <div class="step"><h3>Qual dia?</h3><div class="days" id="days"></div></div>
+    <div class="step"><h3>Qual horário?</h3>
+      <div class="times" id="times"></div>
+      <p class="hint" id="timesHint">Escolha um serviço e um dia para ver os horários livres.</p>
+    </div>
+    <div class="step"><h3>Seus dados</h3>
+      <div class="fields">
+        <div><label for="nome">Nome</label><input id="nome" autocomplete="name" placeholder="Seu nome"></div>
+        <div><label for="tel">WhatsApp com DDD</label><input id="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(22) 90000-0000"></div>
+      </div>
+      <button class="btn" id="confirm">Confirmar agendamento</button>
+      <p class="err" id="err" role="alert"></p>
+    </div>
+
+    <div class="done" id="done">
+      <h3>Horário reservado!</h3>
+      <p id="doneTxt"></p><br>
+      <a class="btn" id="doneWa" target="_blank" rel="noopener">Avisar a barbearia no WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap info">
+    <div><h3>Horários</h3><p>Segunda a sábado<br>08:00 às 11:30<br>13:00 às 18:00</p></div>
+    <div><h3>Onde estamos</h3><p>Rua José do Nascimento, 65<br>Santo Antônio de Pádua, RJ<br>CEP 28470-000</p></div>
+    <div><h3>Contato</h3><p>WhatsApp: <a href="https://wa.me/5522988581590" target="_blank" rel="noopener">(22) 98858-1590</a><br>Instagram: @_jmbarber__</p></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>JM Barber, desde 2023</span>
+    <button id="openOwner">Área do dono</button>
+  </div>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Painel do dono">
+  <div class="sheet">
+    <header><h2>Painel do dono</h2><button class="sm" id="closeOwner">Fechar</button></header>
+    <div id="login">
+      <label for="pin">Digite a senha</label>
+      <input id="pin" type="password" inputmode="numeric" autocomplete="off">
+      <p class="err" id="pinErr"></p>
+      <button class="btn" id="pinOk">Entrar</button>
+    </div>
+    <div id="panel" hidden>
+      <div class="tools">
+        <select id="filter" aria-label="Filtrar agendamentos">
+          <option value="today">Hoje</option>
+          <option value="tomorrow">Amanhã</option>
+          <option value="all">Todos os próximos</option>
+        </select>
+      </div>
+      <div id="list"></div>
+      <h3 style="margin:22px 0 8px">Mensagem de lembrete</h3>
+      <p class="hint" style="margin-bottom:8px">Use {nome}, {servico}, {data} e {hora}. Cada agendamento tem um botão que abre o WhatsApp do cliente com esta mensagem pronta.</p>
+      <textarea id="tpl" rows="6"></textarea>
+      <div class="tools">
+        <button class="btn" id="saveTpl">Salvar mensagem</button>
+        <button class="btn ghost" id="resetTpl">Restaurar padrão</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const CFG={
+  phone:"5522988581590",      // WhatsApp da barbearia
+  pin:"1234",                 // senha do painel (troque aqui)
+  daysAhead:14,
+  openDays:[1,2,3,4,5,6],     // 0 = domingo
+  periods:[["08:00","11:30"],["13:00","18:00"]],
+  step:30,                    // minutos por horário
+  services:[
+    {id:"corte",name:"Corte de cabelo",min:30},
+    {id:"barba",name:"Barba alinhada",min:30},
+    {id:"combo",name:"Corte + barba",min:60},
+    {id:"kids",name:"Corte kids + desenho lateral",min:30}
+  ]
+};
+const DEFAULT_TPL="Olá, {nome}! 💈 Passando para lembrar do seu horário na JM Barber: {servico}, {data} às {hora}. Rua José do Nascimento, 65. Se precisar remarcar, é só responder aqui. Até lá!";
+const $=id=>document.getElementById(id);
+const mem={};
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return k in mem?mem[k]:d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}
+};
+const toMin=t=>{const[h,m]=t.split(":").map(Number);return h*60+m};
+const toStr=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const fromKey=k=>{const[y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)};
+const fmtLong=k=>fromKey(k).toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+const bookings=()=>store.get("jm_bookings",[]);
+const svc=id=>CFG.services.find(s=>s.id===id);
+
+function daySlots(){
+  const out=[];
+  CFG.periods.forEach(([a,b])=>{for(let m=toMin(a);m+CFG.step<=toMin(b);m+=CFG.step)out.push(m)});
+  return out;
+}
+function occupied(dk){
+  const set=new Set();
+  bookings().filter(b=>b.date===dk).forEach(b=>{
+    for(let i=0;i<b.min/CFG.step;i++)set.add(toMin(b.time)+i*CFG.step);
+  });
+  return set;
+}
+function isFree(dk,start,min){
+  const slots=daySlots(),busy=occupied(dk),now=new Date();
+  for(let i=0;i<min/CFG.step;i++){
+    const m=start+i*CFG.step;
+    if(!slots.includes(m)||busy.has(m))return false;
+  }
+  if(dk===key(now)&&start<=now.getHours()*60+now.getMinutes())return false;
+  return true;
+}
+
+const S={service:null,date:null,time:null};
+
+function renderServices(){
+  $("services").innerHTML="";
+  CFG.services.forEach(s=>{
+    const b=document.createElement("button");
+    b.className="card"+(S.service===s.id?" sel":"");
+    b.innerHTML="<b></b><span></span>";
+    b.firstChild.textContent=s.name;
+    b.lastChild.textContent=s.min+" minutos";
+    b.onclick=()=>{S.service=s.id;S.time=null;renderServices();renderTimes()};
+    $("services").appendChild(b);
+  });
+}
+function renderDays(){
+  $("days").innerHTML="";
+  const today=new Date();
+  for(let i=0;i<CFG.daysAhead;i++){
+    const d=new Date(today.getFullYear(),today.getMonth(),today.getDate()+i);
+    if(!CFG.openDays.includes(d.getDay()))continue;
+    const k=key(d),b=document.createElement("button");
+    b.className="day"+(S.date===k?" sel":"");
+    b.innerHTML="<small></small><strong></strong>";
+    b.firstChild.textContent=i===0?"hoje":d.toLocaleDateString("pt-BR",{weekday:"short"}).replace(".","");
+    b.lastChild.textContent=d.getDate();
+    b.onclick=()=>{S.date=k;S.time=null;renderDays();renderTimes()};
+    $("days").appendChild(b);
+  }
+}
+function renderTimes(){
+  const box=$("times");box.innerHTML="";
+  if(!S.service||!S.date){$("timesHint").textContent="Escolha um serviço e um dia para ver os horários livres.";return}
+  const min=svc(S.service).min;let free=0;
+  daySlots().forEach(m=>{
+    const ok=isFree(S.date,m,min),b=document.createElement("button");
+    b.className="time"+(S.time===m?" sel":"");
+    b.textContent=toStr(m);b.disabled=!ok;
+    if(ok){free++;b.onclick=()=>{S.time=m;renderTimes()}}
+    box.appendChild(b);
+  });
+  $("timesHint").textContent=free?free+" horários livres. Os riscados já estão ocupados.":"Sem horários livres neste dia. Tente outro dia.";
+}
+
+function normPhone(v){
+  let d=v.replace(/\D/g,"");
+  if(d.startsWith("55")&&d.length>11)d=d.slice(2);
+  return d.length>=10&&d.length<=11?"55"+d:null;
+}
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2600)}
+
+$("confirm").onclick=()=>{
+  const err=$("err");err.textContent="";
+  const nome=$("nome").value.trim(),tel=normPhone($("tel").value);
+  if(!S.service)return err.textContent="Escolha o serviço.";
+  if(!S.date)return err.textContent="Escolha o dia.";
+  if(S.time==null)return err.textContent="Escolha o horário.";
+  if(nome.length<2)return err.textContent="Digite seu nome.";
+  if(!tel)return err.textContent="Digite um WhatsApp válido com DDD.";
+  const s=svc(S.service);
+  // checa de novo na hora de salvar: impede horário repetido
+  if(!isFree(S.date,S.time,s.min)){
+    S.time=null;renderTimes();
+    return err.textContent="Esse horário acabou de ser ocupado. Escolha outro.";
+  }
+  const list=bookings();
+  list.push({id:Date.now().toString(36),date:S.date,time:toStr(S.time),min:s.min,service:s.name,name:nome,phone:tel});
+  store.set("jm_bookings",list);
+  const msg="Olá! Agendei na JM Barber: "+s.name+", "+fmtLong(S.date)+" às "+toStr(S.time)+". Nome: "+nome+".";
+  $("doneTxt").textContent=s.name+", "+fmtLong(S.date)+" às "+toStr(S.time)+". Avise a barbearia para garantir a confirmação.";
+  $("doneWa").href="https://wa.me/"+CFG.phone+"?text="+encodeURIComponent(msg);
+  $("done").classList.add("show");$("done").scrollIntoView({behavior:"smooth",block:"center"});
+  S.time=null;renderTimes();
+};
+
+/* status aberto/fechado */
+function updateStatus(){
+  const n=new Date(),m=n.getHours()*60+n.getMinutes();
+  const open=CFG.openDays.includes(n.getDay())&&CFG.periods.some(([a,b])=>m>=toMin(a)&&m<toMin(b));
+  $("status").classList.toggle("open",open);
+  $("statusTxt").textContent=open?"Aberta agora":"Fechada no momento";
+}
+
+/* painel do dono */
+const tpl=()=>store.get("jm_tpl",DEFAULT_TPL);
+function fillTpl(b){
+  return tpl().replace(/\{nome\}/g,b.name.split(" ")[0]).replace(/\{servico\}/g,b.service.toLowerCase())
+    .replace(/\{data\}/g,fmtLong(b.date)).replace(/\{hora\}/g,b.time);
+}
+function renderList(){
+  const f=$("filter").value,td=new Date(),tk=key(td),tm=key(new Date(td.getFullYear(),td.getMonth(),td.getDate()+1));
+  const list=bookings().filter(b=>f==="today"?b.date===tk:f==="tomorrow"?b.date===tm:b.date>=tk)
+    .sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const box=$("list");box.innerHTML="";
+  if(!list.length){box.innerHTML='<p class="hint">Nenhum agendamento neste filtro.</p>';return}
+  list.forEach(b=>{
+    const r=document.createElement("div");r.className="row";
+    r.innerHTML='<div class="when"></div><div class="who"><b></b><small></small></div><div class="acts"><a class="sm wa" target="_blank" rel="noopener">Lembrar no WhatsApp</a><button class="sm del">Cancelar</button></div>';
+    r.querySelector(".when").textContent=(f==="all"?fromKey(b.date).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" ":"")+b.time;
+    r.querySelector("b").textContent=b.name;
+    r.querySelector("small").textContent=b.service+" · "+b.phone.replace(/^55(\d\d)(\d+)$/,"($1) $2");
+    r.querySelector(".wa").href="https://wa.me/"+b.phone+"?text="+encodeURIComponent(fillTpl(b));
+    r.querySelector(".del").onclick=()=>{
+      if(!confirm("Cancelar o horário de "+b.name+"? Ele volta a ficar livre."))return;
+      store.set("jm_bookings",bookings().filter(x=>x.id!==b.id));
+      renderList();renderTimes();toast("Agendamento cancelado");
+    };
+    box.appendChild(r);
+  });
+}
+function openOwner(){$("modal").classList.add("show");$("pin").focus()}
+$("openOwner").onclick=openOwner;
+$("closeOwner").onclick=()=>$("modal").classList.remove("show");
+$("modal").onclick=e=>{if(e.target===$("modal"))$("modal").classList.remove("show")};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("modal").classList.remove("show")});
+$("pinOk").onclick=()=>{
+  if($("pin").value!==CFG.pin){$("pinErr").textContent="Senha incorreta.";return}
+  $("pinErr").textContent="";$("pin").value="";
+  $("login").hidden=true;$("panel").hidden=false;$("tpl").value=tpl();renderList();
+};
+$("pin").addEventListener("keydown",e=>{if(e.key==="Enter")$("pinOk").click()});
+$("filter").onchange=renderList;
+$("saveTpl").onclick=()=>{store.set("jm_tpl",$("tpl").value.trim()||DEFAULT_TPL);renderList();toast("Mensagem salva")};
+$("resetTpl").onclick=()=>{store.set("jm_tpl",DEFAULT_TPL);$("tpl").value=DEFAULT_TPL;renderList();toast("Mensagem padrão restaurada")};
+
+renderServices();renderDays();renderTimes();updateStatus();setInterval(updateStatus,60000);
+</script>
+</body>
+</html>
